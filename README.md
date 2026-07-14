@@ -25,8 +25,8 @@ Select a shortcut fr0om the Shortcuts drop down list and run the command:
 
 
 
-The project is primarily written in C++ and utilizes QMake for building and project management. Its user interface and functionalities are designed to enhance productivity when dealing with clipboard text content.
-
+The project is primarily written in C++ and utilizes QMake for building and project management. Its user interface and functionalities are designed to speed up the FFMPEG commands mopstly used.
+The commands can be customized.
 
 Example Usage (from commandline/bash environment):
 
