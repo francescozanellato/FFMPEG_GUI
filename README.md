@@ -19,13 +19,14 @@ FFMPEG_GUI - A GUI for FFMPEG
 
 # Features
 
-Select a shortcut fr0om the Shortcuts drop down list and run the command:
+Select a shortcut from the Shortcuts drop down list and run the command:
 
 <img width="1135" height="733" alt="image017" src="https://github.com/user-attachments/assets/8b2c1bbd-991a-4ddc-adfc-00b6c260b160" />
 
 
 
-The project is primarily written in C++ and utilizes QMake for building and project management. Its user interface and functionalities are designed to speed up the FFMPEG commands mopstly used.
+The project is primarily written in C++ and utilizes QMake for building and project management. Its user interface and functionalities are designed to speed up the FFMPEG commands mostly used.
+
 The commands can be customized.
 
 Example Usage (from commandline/bash environment):
