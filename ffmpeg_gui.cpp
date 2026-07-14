@@ -34,6 +34,8 @@ void DropLineEdit::dropEvent(QDropEvent *e) {
 FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
     auto *layout = new QFormLayout(this);
 
+    this->setWindowTitle("FFMPEG_GUI v" APP_VERSION);
+
     // Lambda helper per creare riga con DropLineEdit + Bottone
     auto createRow = [this](DropLineEdit*& edit, QPushButton* btn, auto slot) {
         edit = new DropLineEdit(this);
