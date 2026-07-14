@@ -15,7 +15,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = FFMPEG_GUI
 TEMPLATE = app
 
-VERSION = 1.0.1
+VERSION = 1.0.2
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_NAME=\\\"FFMPEG_GUI\\\"
 DEFINES += APP_ORGANIZATION=\\\"Francesco Paolo Luca Zanellato\\\"
