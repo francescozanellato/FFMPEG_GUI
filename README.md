@@ -21,7 +21,8 @@ FFMPEG_GUI - A GUI for FFMPEG
 
 Select a shortcut fr0om the Shortcuts drop down list and run the command:
 
-![immagine](https://github.com/user-attachments/assets/987feecd-0385-4f5f-8cb5-12d0448bfb54)
+<img width="1135" height="733" alt="image017" src="https://github.com/user-attachments/assets/8b2c1bbd-991a-4ddc-adfc-00b6c260b160" />
+
 
 
 The project is primarily written in C++ and utilizes QMake for building and project management. Its user interface and functionalities are designed to enhance productivity when dealing with clipboard text content.
