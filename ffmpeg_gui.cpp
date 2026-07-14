@@ -67,6 +67,10 @@ FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
 
     btnRun = new QPushButton(tr("Run Command"), this);
     btnRun->setIcon(style()->standardIcon(QStyle::SP_DialogApplyButton)); //QStyle::SP_DialogOpenButton
+    btnStop = new QPushButton(tr("Stop Command"), this);
+    btnStop->setIcon(style()->standardIcon(QStyle::SP_DialogCancelButton)); //QStyle::SP_DialogCancelButton
+    btnStop->setEnabled(false); // Disabilitato all'avvio
+
     btnSettings = new QPushButton(tr("Open Settings"), this);
     btnSettings->setIcon(style()->standardIcon(QStyle::SP_FileDialogDetailedView)); //QStyle::SP_DialogOpenButton
     btnLicense = new QPushButton(tr("License"), this);
@@ -77,6 +81,7 @@ FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
     // Disposizione affiancata
     auto *btnLayout = new QHBoxLayout;
     btnLayout->addWidget(btnRun);
+    btnLayout->addWidget(btnStop);
     btnLayout->addStretch();
     btnLayout->addWidget(btnSettings);
     btnLayout->addWidget(btnLicense);
@@ -115,6 +120,7 @@ FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
     });
     
     connect(btnRun, &QPushButton::clicked, this, &FFmpegGUI::executeCommand);
+    connect(btnStop, &QPushButton::clicked, this, &FFmpegGUI::stopProcess);
     connect(btnSettings, &QPushButton::clicked, this, &FFmpegGUI::openSettingsFile);
     connect(btnLicense, &QPushButton::clicked, this, &FFmpegGUI::showLicense);
     connect(btnAboutQt, &QPushButton::clicked, this, &FFmpegGUI::aboutQt);
@@ -317,6 +323,15 @@ void FFmpegGUI::sendConsoleInput() {
 void FFmpegGUI::processFinished(int exitCode, QProcess::ExitStatus exitStatus) {
     QString status = (exitStatus == QProcess::NormalExit) ? "completato" : "andato in crash";
     consoleOutput->appendPlainText(QString(tr("\n--- PROCESS FINISHED (Codes: %1, %2) ---")).arg(exitCode).arg(status));
+    btnRun->setEnabled(true);   // Riabilita il tasto avvia
+    btnStop->setEnabled(false);  // Disabilita il tasto stop
+}
+
+void FFmpegGUI::stopProcess() {
+    if (ffmpegProcess->state() == QProcess::Running) {
+        consoleOutput->appendPlainText(tr("\n--- PROCESS KILLED ---"));
+        ffmpegProcess->kill(); // Chiude istantaneamente FFmpeg
+    }
 }
 
 void FFmpegGUI::executeCommand() {
@@ -365,4 +380,6 @@ void FFmpegGUI::executeCommand() {
     // Separa gli argomenti in modo corretto per QProcess
     QStringList args = QProcess::splitCommand(cmd);
     ffmpegProcess->start(ffmpegPath, args);
+    btnRun->setEnabled(false);  // Disabilita il tasto avvia durante l'elaborazione
+    btnStop->setEnabled(true);  // Abilita il tasto stop
 }

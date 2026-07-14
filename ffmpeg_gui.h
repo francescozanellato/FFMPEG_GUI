@@ -36,6 +36,7 @@ private slots:
     void browseOutput();
     void loadSettings();
     void executeCommand();
+    void stopProcess();
     void fill_defaultEditOutputField();
     void readProcessOutput();
     void sendConsoleInput();
@@ -49,9 +50,11 @@ private:
     DropLineEdit *editVideo, *editAudio1, *editAudio2, *editAudio3, *editOutput;
     QComboBox *comboOptions, *comboCombinations;
     QPushButton *btnRun;
+    QPushButton *btnStop;
     QPushButton *btnSettings;
     QPushButton *btnLicense;
     QPushButton *btnAboutQt;
+
 
     QString ffmpegPath;
 
