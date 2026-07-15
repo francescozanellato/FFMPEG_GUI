@@ -15,14 +15,14 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = FFMPEG_GUI
 TEMPLATE = app
 
-VERSION = 1.0.2
+VERSION = 1.0.3
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_NAME=\\\"FFMPEG_GUI\\\"
 DEFINES += APP_ORGANIZATION=\\\"Francesco Paolo Luca Zanellato\\\"
 DEFINES += APP_ORGANIZATION_DOMAIN=\\\"https://francescozanellato.blogspot.com/\\\"
-DEFINES += MY_COPYRIGHT=\\\"Copyright_2026_Francesco_Paolo_Luca_Zanellato._All_Rights_Reserved.\\\"
+DEFINES += MY_COPYRIGHT=\\\"Copyright_2026_Francesco_Paolo_Luca_Zanellato.\\\"
 
-QMAKE_TARGET_COPYRIGHT = "\\251 2026 Francesco Paolo Luca Zanellato. All Rights Reserved."
+QMAKE_TARGET_COPYRIGHT = "\\251 2026 Francesco Paolo Luca Zanellato. License: GPL 3.0"
 
 
 # COMPILE LITE VERSION OF THE PROGRAM:
