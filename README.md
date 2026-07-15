@@ -128,3 +128,8 @@ Run the Application:
 
     ./FFMPEG_GUI
 
+
+
+# Credits
+
+Thanks to https://gemini.google.com for the coding support.
