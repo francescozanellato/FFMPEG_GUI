@@ -57,6 +57,7 @@ private:
 
 
     QString ffmpegPath;
+    QString thisAppName;
 
     QProcess *ffmpegProcess;
     QPlainTextEdit *consoleOutput;

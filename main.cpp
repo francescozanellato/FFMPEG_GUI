@@ -13,11 +13,22 @@
 #include <QClipboard>
 #include <QTimer>
 #include <QSharedMemory>
+#include <QCoreApplication>
+#include <QFileInfo>
+#include <QMainWindow>
+
+// All'interno del tuo main o del costruttore della MainWindow
 
 int main(int argc, char *argv[])
 {
+
+    //QApplication a(argc, argv);
+    QApplication::setStyle("Fusion"); // This is needed to correct the wrong cells highlight on Windows 11.
+    QApplication ab(argc, argv);
+
     QSharedMemory sharedMemory;
-    sharedMemory.setKey("FFMPEG_GUI_QT_ID");
+    // sharedMemory.setKey("FFMPEG_GUI_QT_ID");
+    sharedMemory.setKey(QFileInfo(ab.applicationFilePath()).baseName() + "_QT_ID");
     if(sharedMemory.attach()) {
         // m_isRunning = true;
         return 2;
@@ -26,55 +37,13 @@ int main(int argc, char *argv[])
     if (!sharedMemory.create(1)) {
         return 3; // Exit already a process running
     }
-    //QApplication a(argc, argv);
-    QApplication::setStyle("Fusion"); // This is needed to correct the wrong cells highlight on Windows 11.
-    QApplication ab(argc, argv);
-    QStringList arguments = ab.arguments();
-    if (arguments.size() > 1 && arguments.at(1)=="-progressive")
-    { //Non-interactive mode. Progressive paste to clipboard
-        //qDebug("Non-interactive mode. Progressive paste to clipboard...");
-        QSettings *settings = new QSettings(ab.applicationDirPath()+"/PasteOnlyText.txt",QSettings::IniFormat,0);
 
-        QString replaceTextListSeparator = settings->value("ReplaceTextListSeparator",+";;").toString();
-        QString progressiveText = settings->value("ProgressiveText","").toString();
 
-        int currentIndex = settings->value("imageNumber",+"1").toInt();
-
-        if (progressiveText.isEmpty()) {
-            settings->setValue("ProgressiveText","Example1;;Example2;;Example3");
-            settings->sync();
-            //qDebug("ProgressiveText is empty. Example1;;Example2 created in settings. Exiting.");
-            return 1;
-        }
-        QStringList progressiveTextList = progressiveText.split(replaceTextListSeparator);
-
-        if (currentIndex>progressiveTextList.size())
-            currentIndex = 1;
-
-        QClipboard *clipboard = QApplication::clipboard();
-        clipboard->setText(progressiveTextList.at(currentIndex-1));
-        //clipboard->setText("ciao");
-        currentIndex++;
-
-        settings->setValue("imageNumber",currentIndex);
-
-        //QObject::connect(settings, SIGNAL(destroyed()), &ab, SLOT(quit()));
-
-        delete settings;
-        //delete clipboard;
-        QTimer::singleShot(500, &ab, SLOT(quit()));
-        return ab.exec();
-
-        //return 0;
-    }
-
-    else
-    {
         //QApplication a(argc, argv);
         FFmpegGUI w;
         //w.resize(1024,200);
         w.show();
 
         return ab.exec();
-    }
+
 }

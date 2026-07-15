@@ -34,7 +34,9 @@ void DropLineEdit::dropEvent(QDropEvent *e) {
 FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
     auto *layout = new QFormLayout(this);
 
-    this->setWindowTitle("FFMPEG_GUI v" APP_VERSION);
+    // this->setWindowTitle("FFMPEG_GUI v" APP_VERSION);
+    thisAppName = QFileInfo(QCoreApplication::applicationFilePath()).baseName();
+    this->setWindowTitle(thisAppName+ " v" APP_VERSION);
 
     // Lambda helper per creare riga con DropLineEdit + Bottone
     auto createRow = [this](DropLineEdit*& edit, QPushButton* btn, auto slot) {
@@ -128,6 +130,18 @@ FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
     loadSettings();
     editVideo->setFocus();
 
+    const QStringList args = QCoreApplication::arguments();
+
+    if (args.size() >= 2) { editVideo->setText(args.at(1));
+        //*editAudio1, *editAudio2, *editAudio3, *editOutput;
+        fill_defaultEditOutputField();
+    }
+    if (args.size() >= 3) editAudio1->setText(args.at(2));
+    if (args.size() >= 4) editAudio2->setText(args.at(3));
+    if (args.size() >= 5) editAudio3->setText(args.at(4));
+    if (args.size() >= 6) editOutput->setText(args.at(5));
+
+
     // Esegue la funzione ogni volta che il testo del campo video cambia
     //connect(editVideo, &QLineEdit::textChanged, this, &FFmpegGUI::fill_defaultEditOutputField);
 }
@@ -158,7 +172,7 @@ void FFmpegGUI::showLicense() {
 }
 
 void FFmpegGUI::openSettingsFile() {
-    QString iniPath = QCoreApplication::applicationDirPath() + "/FFMPEG_GUI.ini";
+    QString iniPath = QCoreApplication::applicationDirPath() + "/" + thisAppName +".ini";
     if (!QFile::exists(iniPath)) {
         QMessageBox::warning(this, tr("Warning"), tr("Configuration file is not present. Close and open again this program to generate a default one"));
         return;
@@ -186,7 +200,7 @@ void FFmpegGUI::browseAudio3() { editAudio3->setText(browseFile()); }
 void FFmpegGUI::browseOutput() { editOutput->setText(browseFile(true)); }
 
 void FFmpegGUI::loadSettings() {
-    QString iniPath = QCoreApplication::applicationDirPath() + "/FFMPEG_GUI.ini";
+    QString iniPath = QCoreApplication::applicationDirPath() + "/" + thisAppName +".ini";
     QSettings settings(iniPath, QSettings::IniFormat);
 
 #ifdef Q_OS_WINDOWS
@@ -246,7 +260,7 @@ void FFmpegGUI::loadSettings() {
 
 void FFmpegGUI::closeEvent(QCloseEvent *event) {
     //INCLUDES savesettings command
-    QString iniPath = QCoreApplication::applicationDirPath() + "/FFMPEG_GUI.ini";
+    QString iniPath = QCoreApplication::applicationDirPath() + "/" + thisAppName +".ini";
     QSettings settings(iniPath, QSettings::IniFormat);
 
     settings.setValue("Program/ffmpeg_path", ffmpegPath);
