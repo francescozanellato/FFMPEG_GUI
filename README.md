@@ -21,7 +21,8 @@ FFMPEG_GUI - A GUI for FFMPEG
 
 Select a shortcut from the Shortcuts drop down list and run the command:
 
-<img width="1135" height="733" alt="image017" src="https://github.com/user-attachments/assets/8b2c1bbd-991a-4ddc-adfc-00b6c260b160" />
+<img width="1135" height="733" alt="image018" src="https://github.com/user-attachments/assets/a64e71f1-a508-4eb0-8818-74c05b09845f" />
+
 
 
 
