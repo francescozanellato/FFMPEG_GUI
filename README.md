@@ -1,5 +1,5 @@
 # FFMPEG_GUI
-FFMPEG_GUI - A GUI for FFMPEG
+FFMPEG_GUI - A GUI for FFMPEG and any commandline tool (QPDF, PDFTK, PDFUnisci, etc.)
 
     Author: Francesco Paolo Luca Zanellato
     Copyright (C) 2026 Francesco Paolo Luca Zanellato
@@ -24,6 +24,9 @@ Select a shortcut from the Shortcuts drop down list and run the command:
 <img width="1135" height="733" alt="image018" src="https://github.com/user-attachments/assets/a64e71f1-a508-4eb0-8818-74c05b09845f" />
 
 
+You can yous this program with ANY COMMANDLINE PROGRAM (e.g. qpdf, pdftk, pdfUnisci, etc.): just rename the .exe and .ini (and .vbs) files (e.g. QPDF_GUI.exe, QPDF_GUI.ini, QPDF_GUI.vbs), tweak the .ini file to fit your custom executable and the relevant [Combinations] section in the .ini file. Run the app and use your custom combinations with your commandline executable.
+
+The program supports up to 5 commandline input files (or just drag and drop up to 5 files on the executable or .vbs script).
 
 
 The project is primarily written in C++ and utilizes QMake for building and project management. Its user interface and functionalities are designed to speed up the FFMPEG commands mostly used.
