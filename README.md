@@ -132,4 +132,4 @@ Run the Application:
 
 # Credits
 
-Thanks to https://gemini.google.com for the coding support.
+Thanks to https://gemini.google.com for the AI support on coding.
