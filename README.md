@@ -1,5 +1,5 @@
 # UNIVERSAL_GUI
-UNIVERSAL_GUI - A GUI for ANY commandline tool (FFMPEG, QPDF, PDFTK, PDFUnisci, etc.)
+UNIVERSAL_GUI - A GUI for ANY standard commandline tool (FFMPEG, QPDF, PDFTK, PDFUnisci, etc.)
 
     Author: Francesco Paolo Luca Zanellato
     Copyright (C) 2026 Francesco Paolo Luca Zanellato
