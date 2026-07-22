@@ -12,15 +12,15 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = FFMPEG_GUI
+TARGET = UNIVERSAL_GUI
 TEMPLATE = app
 
 VERSION = 1.0.4
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
-DEFINES += APP_NAME=\\\"FFMPEG_GUI\\\"
+DEFINES += APP_NAME=\\\"UNIVERSAL_GUI\\\"
 DEFINES += APP_ORGANIZATION=\\\"Francesco Paolo Luca Zanellato\\\"
 DEFINES += APP_ORGANIZATION_DOMAIN=\\\"https://francescozanellato.blogspot.com/\\\"
-DEFINES += MY_COPYRIGHT=\\\"Copyright_2026_Francesco_Paolo_Luca_Zanellato.\\\"
+DEFINES += MY_COPYRIGHT=\\\"Copyright_2026_Francesco_Paolo_Luca_Zanellato._License:_GPL_3.0\\\"
 
 QMAKE_TARGET_COPYRIGHT = "\\251 2026 Francesco Paolo Luca Zanellato. License: GPL 3.0"
 
@@ -33,12 +33,10 @@ QMAKE_TARGET_COPYRIGHT = "\\251 2026 Francesco Paolo Luca Zanellato. License: GP
 
 
 SOURCES += main.cpp \
-    ffmpeg_gui.cpp
+    universal_gui.cpp
 
 HEADERS  += \
-    ffmpeg_gui.h
-
-# FORMS    += ffmpeg_gui.ui
+    universal_gui.h
 
 # ICON in executable:
 RC_ICONS = icon.ico
