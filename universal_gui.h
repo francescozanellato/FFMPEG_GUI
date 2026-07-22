@@ -1,5 +1,5 @@
-#ifndef FFMPEG_GUI_H
-#define FFMPEG_GUI_H
+#ifndef UNIVERSAL_GUI_H
+#define UNIVERSAL_GUI_H
 
 #include <QWidget>
 #include <QLineEdit>
@@ -23,10 +23,10 @@ protected:
     void dropEvent(QDropEvent *e) override;
 };
 
-class FFmpegGUI : public QWidget {
+class UniversalGUI : public QWidget {
     Q_OBJECT
 public:
-    explicit FFmpegGUI(QWidget *parent = nullptr);
+    explicit UniversalGUI(QWidget *parent = nullptr);
 
 private slots:
     void browseVideo();
@@ -56,10 +56,10 @@ private:
     QPushButton *btnAboutQt;
 
 
-    QString ffmpegPath;
+    QString programPath;
     QString thisAppName;
 
-    QProcess *ffmpegProcess;
+    QProcess *programProcess;
     QPlainTextEdit *consoleOutput;
     QLineEdit *consoleInput;
 
@@ -67,4 +67,4 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 };
 
-#endif // FFMPEG_GUI_H
+#endif // UNIVERSAL_GUI_H

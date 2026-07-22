@@ -15,7 +15,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = UNIVERSAL_GUI
 TEMPLATE = app
 
-VERSION = 1.0.4
+VERSION = 1.0.5
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += APP_NAME=\\\"UNIVERSAL_GUI\\\"
 DEFINES += APP_ORGANIZATION=\\\"Francesco Paolo Luca Zanellato\\\"

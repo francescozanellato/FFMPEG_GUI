@@ -1,4 +1,4 @@
-#include "ffmpeg_gui.h"
+#include "universal_gui.h"
 #include <QFormLayout>
 #include <QHBoxLayout>
 #include <QFileDialog>
@@ -31,10 +31,9 @@ void DropLineEdit::dropEvent(QDropEvent *e) {
     }
 }
 
-FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
+UniversalGUI::UniversalGUI(QWidget *parent) : QWidget(parent) {
     auto *layout = new QFormLayout(this);
 
-    // this->setWindowTitle("FFMPEG_GUI v" APP_VERSION);
     thisAppName = QFileInfo(QCoreApplication::applicationFilePath()).baseName();
     this->setWindowTitle(thisAppName+ " v" APP_VERSION);
 
@@ -45,7 +44,7 @@ FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
 
         edit->setClearButtonEnabled(true);
 
-        connect(edit, &DropLineEdit::fileDropped, this, &FFmpegGUI::fill_defaultEditOutputField);
+        connect(edit, &DropLineEdit::fileDropped, this, &UniversalGUI::fill_defaultEditOutputField);
 
         auto *h = new QHBoxLayout;
         h->addWidget(edit);
@@ -54,15 +53,15 @@ FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
         return h;
     };
 
-    layout->addRow(tr("Video/Audio Input (%1):"), createRow(editVideo, new QPushButton(tr("Browse...")), &FFmpegGUI::browseVideo));
-    layout->addRow(tr("Audio 1 (%2):"), createRow(editAudio1, new QPushButton("Browse..."), &FFmpegGUI::browseAudio1));
-    layout->addRow(tr("Audio 2 (%3):"), createRow(editAudio2, new QPushButton("Browse..."), &FFmpegGUI::browseAudio2));
-    layout->addRow(tr("Audio 3 (%4):"), createRow(editAudio3, new QPushButton("Browse..."), &FFmpegGUI::browseAudio3));
-    layout->addRow(tr("Output (%5):"), createRow(editOutput, new QPushButton("Browse..."), &FFmpegGUI::browseOutput));
+    layout->addRow(tr("File Input 1 (%1):"), createRow(editVideo, new QPushButton(tr("Browse...")), &UniversalGUI::browseVideo));
+    layout->addRow(tr("File Input 2 (%2):"), createRow(editAudio1, new QPushButton("Browse..."), &UniversalGUI::browseAudio1));
+    layout->addRow(tr("File Input 3 (%3):"), createRow(editAudio2, new QPushButton("Browse..."), &UniversalGUI::browseAudio2));
+    layout->addRow(tr("File Input 4 (%4):"), createRow(editAudio3, new QPushButton("Browse..."), &UniversalGUI::browseAudio3));
+    layout->addRow(tr("Output File (%5):"), createRow(editOutput, new QPushButton("Browse..."), &UniversalGUI::browseOutput));
 
     comboOptions = new QComboBox(this);
     comboOptions->setEditable(true);
-    layout->addRow(tr("FFmpeg Options:"), comboOptions);
+    layout->addRow(tr("Program Options:"), comboOptions);
 
     comboCombinations = new QComboBox(this);
     layout->addRow(tr("Shortcuts:"), comboCombinations);
@@ -92,8 +91,8 @@ FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
 
 
     // Inizializzazione QProcess
-    ffmpegProcess = new QProcess(this);
-    ffmpegProcess->setProcessChannelMode(QProcess::MergedChannels); // Unifica stdout e stderr
+    programProcess = new QProcess(this);
+    programProcess->setProcessChannelMode(QProcess::MergedChannels); // Unifica stdout e stderr
 
     // Creazione UI Console
     consoleOutput = new QPlainTextEdit(this);
@@ -108,12 +107,12 @@ FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
     layout->addRow(tr("Input:"), consoleInput);
 
     // Connessioni per il processo e la console
-    connect(ffmpegProcess, &QProcess::readyReadStandardOutput, this, &FFmpegGUI::readProcessOutput);
-    connect(consoleInput, &QLineEdit::returnPressed, this, &FFmpegGUI::sendConsoleInput);
+    connect(programProcess, &QProcess::readyReadStandardOutput, this, &UniversalGUI::readProcessOutput);
+    connect(consoleInput, &QLineEdit::returnPressed, this, &UniversalGUI::sendConsoleInput);
 
     // Gestione compatibile con Qt5 e Qt6 per il segnale finished
-    connect(ffmpegProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            this, &FFmpegGUI::processFinished);
+    connect(programProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            this, &UniversalGUI::processFinished);
 
 
     // Quando si seleziona una combinazione, aggiorna il campo modificabile
@@ -121,11 +120,11 @@ FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
         comboOptions->setCurrentText(comboCombinations->currentData().toString());
     });
     
-    connect(btnRun, &QPushButton::clicked, this, &FFmpegGUI::executeCommand);
-    connect(btnStop, &QPushButton::clicked, this, &FFmpegGUI::stopProcess);
-    connect(btnSettings, &QPushButton::clicked, this, &FFmpegGUI::openSettingsFile);
-    connect(btnLicense, &QPushButton::clicked, this, &FFmpegGUI::showLicense);
-    connect(btnAboutQt, &QPushButton::clicked, this, &FFmpegGUI::aboutQt);
+    connect(btnRun, &QPushButton::clicked, this, &UniversalGUI::executeCommand);
+    connect(btnStop, &QPushButton::clicked, this, &UniversalGUI::stopProcess);
+    connect(btnSettings, &QPushButton::clicked, this, &UniversalGUI::openSettingsFile);
+    connect(btnLicense, &QPushButton::clicked, this, &UniversalGUI::showLicense);
+    connect(btnAboutQt, &QPushButton::clicked, this, &UniversalGUI::aboutQt);
 
     loadSettings();
     editVideo->setFocus();
@@ -143,14 +142,14 @@ FFmpegGUI::FFmpegGUI(QWidget *parent) : QWidget(parent) {
 
 
     // Esegue la funzione ogni volta che il testo del campo video cambia
-    //connect(editVideo, &QLineEdit::textChanged, this, &FFmpegGUI::fill_defaultEditOutputField);
+    //connect(editVideo, &QLineEdit::textChanged, this, &UniversalGUI::fill_defaultEditOutputField);
 }
 
-void FFmpegGUI::aboutQt() {
+void UniversalGUI::aboutQt() {
     QMessageBox::aboutQt(this);
 }
 
-void FFmpegGUI::showLicense() {
+void UniversalGUI::showLicense() {
     //QMessageBox::information(this,"License", QString(MY_COPYRIGHT).replace("_"," "));
     // ... all'interno di una funzione membro (es. MainWindow)
     QString copyrightText = QString::fromUtf8(MY_COPYRIGHT).replace("_"," ");
@@ -171,7 +170,7 @@ void FFmpegGUI::showLicense() {
     QMessageBox::about(this, tr("License"), disclaimer);
 }
 
-void FFmpegGUI::openSettingsFile() {
+void UniversalGUI::openSettingsFile() {
     QString iniPath = QCoreApplication::applicationDirPath() + "/" + thisAppName +".ini";
     if (!QFile::exists(iniPath)) {
         QMessageBox::warning(this, tr("Warning"), tr("Configuration file is not present. Close and open again this program to generate a default one"));
@@ -181,12 +180,12 @@ void FFmpegGUI::openSettingsFile() {
     QDesktopServices::openUrl(QUrl::fromLocalFile(iniPath));
 }
 
-QString FFmpegGUI::browseFile(bool save) {
+QString UniversalGUI::browseFile(bool save) {
     return save ? QFileDialog::getSaveFileName(this, tr("Salva Output File"))
                 : QFileDialog::getOpenFileName(this, tr("Select Input File"));
 }
 
-void FFmpegGUI::browseVideo() {
+void UniversalGUI::browseVideo() {
     QString file = browseFile();
     if (!file.isEmpty()) {
         editVideo->setText(file);
@@ -194,22 +193,22 @@ void FFmpegGUI::browseVideo() {
     }
 }
 
-void FFmpegGUI::browseAudio1() { editAudio1->setText(browseFile()); }
-void FFmpegGUI::browseAudio2() { editAudio2->setText(browseFile()); }
-void FFmpegGUI::browseAudio3() { editAudio3->setText(browseFile()); }
-void FFmpegGUI::browseOutput() { editOutput->setText(browseFile(true)); }
+void UniversalGUI::browseAudio1() { editAudio1->setText(browseFile()); }
+void UniversalGUI::browseAudio2() { editAudio2->setText(browseFile()); }
+void UniversalGUI::browseAudio3() { editAudio3->setText(browseFile()); }
+void UniversalGUI::browseOutput() { editOutput->setText(browseFile(true)); }
 
-void FFmpegGUI::loadSettings() {
+void UniversalGUI::loadSettings() {
     QString iniPath = QCoreApplication::applicationDirPath() + "/" + thisAppName +".ini";
     QSettings settings(iniPath, QSettings::IniFormat);
 
 #ifdef Q_OS_WINDOWS
-    ffmpegPath = settings.value("Program/ffmpeg_path", "C:/PortableApps/ffmpeg/ffmpeg/bin/ffmpeg.exe").toString();
+    programPath = settings.value("Program/program_path", "C:/PortableApps/ffmpeg/ffmpeg/bin/ffmpeg.exe").toString();
 #elif defined(Q_OS_LINUX)
-    ffmpegPath = settings.value("Program/ffmpeg_path", "ffmpeg").toString();
+    programPath = settings.value("Program/program_path", "ffmpeg").toString();
 #else
     // Codice per altri sistemi operativi (es. Q_OS_MACOS per macOS)
-    ffmpegPath = settings.value("Program/ffmpeg_path", "ffmpeg").toString();
+    programPath = settings.value("Program/program_path", "ffmpeg").toString();
 #endif
 
 
@@ -258,12 +257,12 @@ void FFmpegGUI::loadSettings() {
     consoleOutput->setMaximumBlockCount(settings.value("Window/console_max_history_rows", 1000).toInt());
 }
 
-void FFmpegGUI::closeEvent(QCloseEvent *event) {
+void UniversalGUI::closeEvent(QCloseEvent *event) {
     //INCLUDES savesettings command
     QString iniPath = QCoreApplication::applicationDirPath() + "/" + thisAppName +".ini";
     QSettings settings(iniPath, QSettings::IniFormat);
 
-    settings.setValue("Program/ffmpeg_path", ffmpegPath);
+    settings.setValue("Program/program_path", programPath);
 
     // Salva in automatico posizione, dimensioni e stato (anche se massimizzato)
     settings.setValue("Window/width", this->width());
@@ -303,7 +302,7 @@ void FFmpegGUI::closeEvent(QCloseEvent *event) {
     QWidget::closeEvent(event); // Accetta l'evento e chiude la finestra
 }
 
-void FFmpegGUI::fill_defaultEditOutputField() {
+void UniversalGUI::fill_defaultEditOutputField() {
     if (editOutput->text().isEmpty()) {
         QFileInfo fi(editVideo->text());
         // Estrae l'estensione (es. "mp4"). Se esiste, aggiunge il punto.
@@ -315,9 +314,9 @@ void FFmpegGUI::fill_defaultEditOutputField() {
     }
 }
 
-void FFmpegGUI::readProcessOutput() {
-    // Legge l'output di FFmpeg e lo aggiunge alla casella di testo
-    QByteArray out = ffmpegProcess->readAllStandardOutput();
+void UniversalGUI::readProcessOutput() {
+    // Legge l'output del programma e lo aggiunge alla casella di testo
+    QByteArray out = programProcess->readAllStandardOutput();
 
     // Sposta il cursore alla fine per lo scrolling automatico
     consoleOutput->moveCursor(QTextCursor::End);
@@ -325,30 +324,30 @@ void FFmpegGUI::readProcessOutput() {
     consoleOutput->moveCursor(QTextCursor::End);
 }
 
-void FFmpegGUI::sendConsoleInput() {
+void UniversalGUI::sendConsoleInput() {
     // Se il processo è in esecuzione, invia il testo + Ritorno a capo
-    if (ffmpegProcess->state() == QProcess::Running) {
+    if (programProcess->state() == QProcess::Running) {
         QString input = consoleInput->text() + "\n";
-        ffmpegProcess->write(input.toUtf8());
+        programProcess->write(input.toUtf8());
         consoleInput->clear();
     }
 }
 
-void FFmpegGUI::processFinished(int exitCode, QProcess::ExitStatus exitStatus) {
+void UniversalGUI::processFinished(int exitCode, QProcess::ExitStatus exitStatus) {
     QString status = (exitStatus == QProcess::NormalExit) ? "completato" : "andato in crash";
     consoleOutput->appendPlainText(QString(tr("\n--- PROCESS FINISHED (Codes: %1, %2) ---")).arg(exitCode).arg(status));
     btnRun->setEnabled(true);   // Riabilita il tasto avvia
     btnStop->setEnabled(false);  // Disabilita il tasto stop
 }
 
-void FFmpegGUI::stopProcess() {
-    if (ffmpegProcess->state() == QProcess::Running) {
+void UniversalGUI::stopProcess() {
+    if (programProcess->state() == QProcess::Running) {
         consoleOutput->appendPlainText(tr("\n--- PROCESS KILLED ---"));
-        ffmpegProcess->kill(); // Chiude istantaneamente FFmpeg
+        programProcess->kill(); // Chiude istantaneamente il programma a riga di comando
     }
 }
 
-void FFmpegGUI::executeCommand() {
+void UniversalGUI::executeCommand() {
 
     if (editVideo->text().isEmpty()) {
         QMessageBox::information(this, "Warning", "\"Video/Audio Input\" field cannot be empty. Exiting.");
@@ -365,8 +364,7 @@ void FFmpegGUI::executeCommand() {
             .replace("%4", QString("\"%1\"").arg(editAudio3->text()))
             .replace("%5", QString("\"%1\"").arg(editOutput->text()));
 
-    //QString finalCommand = "ffmpeg " + cmd;
-    QString finalCommand = QString("\"%1\" %2").arg(ffmpegPath, cmd);
+    QString finalCommand = QString("\"%1\" %2").arg(programPath, cmd);
     
     // Finestra di debug per mostrare il comando generato
     QMessageBox::StandardButton reply = QMessageBox::question(this, tr("Run Confirmation"),
@@ -378,10 +376,10 @@ void FFmpegGUI::executeCommand() {
     }
 
     // Esecuzione reale con QProcess usando il path configurato
-    //QProcess::startDetached(ffmpegPath, QProcess::splitCommand(cmd));
+    //QProcess::startDetached(programPath, QProcess::splitCommand(cmd));
 
     // Esecuzione interattiva della console:
-    if (ffmpegProcess->state() == QProcess::Running) {
+    if (programProcess->state() == QProcess::Running) {
         QMessageBox::warning(this, tr("Warning"), tr("A process is already running!"));
         return;
     }
@@ -393,7 +391,7 @@ void FFmpegGUI::executeCommand() {
 
     // Separa gli argomenti in modo corretto per QProcess
     QStringList args = QProcess::splitCommand(cmd);
-    ffmpegProcess->start(ffmpegPath, args);
+    programProcess->start(programPath, args);
     btnRun->setEnabled(false);  // Disabilita il tasto avvia durante l'elaborazione
     btnStop->setEnabled(true);  // Abilita il tasto stop
 }

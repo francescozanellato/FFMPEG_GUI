@@ -2,7 +2,7 @@
  * Author: Francesco Paolo Luca Zanellato
  */
 
-#include "ffmpeg_gui.h"
+#include "universal_gui.h"
 #include <QApplication>
 
 
@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
     QApplication ab(argc, argv);
 
     QSharedMemory sharedMemory;
-    // sharedMemory.setKey("FFMPEG_GUI_QT_ID");
     sharedMemory.setKey(QFileInfo(ab.applicationFilePath()).baseName() + "_QT_ID");
     if(sharedMemory.attach()) {
         // m_isRunning = true;
@@ -40,7 +39,7 @@ int main(int argc, char *argv[])
 
 
         //QApplication a(argc, argv);
-        FFmpegGUI w;
+        UniversalGUI w;
         //w.resize(1024,200);
         w.show();
 
